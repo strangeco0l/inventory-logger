@@ -23,34 +23,53 @@ class Sneaker:
 
 
 def sneaker_inventory_log():
-    # Collecting inputs from the user
-    purchase_date = input("Purchase date?: ")
-    retailer = input("Retailer?: ")
-    release_date = input("Release date?: ")
-    size = input("What size?: ")
-    brand = input("Brand?: ")
-    model = input("Model?: ")
-    color_way = input("CW?: ")
-    sku = input("Sku?: ")
-    retail = float(input("What did you pay?: "))
-    resale = float(input("Whats it worth?: "))
-    quantity = int(input("Quantity?: "))
+    # function to gather sneaker data
+    def gather_sneaker_data():
+        purchase_date = input("Purchase date?: ")
+        retailer = input("Retailer?: ")
+        release_date = input("Release date?: ")
+        size = input("What size?: ")
+        brand = input("Brand?: ")
+        model = input("Model?: ")
+        color_way = input("CW?: ")
+        sku = input("Sku?: ")
+        retail = float(input("What did you pay?: "))
+        resale = float(input("Whats it worth?: "))
+        quantity = int(input("Quantity?: "))
 
-    # Creating an instance of the Sneaker data class
-    sneaker = Sneaker(
-        purchase_date=purchase_date,
-        retailer=retailer.title(),
-        release_date=release_date,
-        size=size,
-        brand=brand.title(),
-        model=model.title(),
-        colorway=color_way.title(),
-        sku=sku,
-        retail_price=retail,
-        resale_price=resale,
-        quantity=quantity
-    )
+        # Creating an instance of the Sneaker data class
+        sneaker = Sneaker(
+            purchase_date=purchase_date,
+            retailer=retailer.title(),
+            release_date=release_date,
+            size=size,
+            brand=brand.title(),
+            model=model.title(),
+            colorway=color_way.title(),
+            sku=sku,
+            retail_price=retail,
+            resale_price=resale,
+            quantity=quantity
+        )
 
-    from data_handling import save_sneaker_data
-    save_sneaker_data(sneaker)
+        # Save the sneaker data
+        from data_handling import save_sneaker_data
+        save_sneaker_data(sneaker)
+
+        print("Sneaker logged succesfully!\n")
+    # Collect the first set of information outside the loop
+    gather_sneaker_data()
+
+    # Now enter the loop to log additional sneakers
+    while True:
+        user_input = input("Continue? Type 'y to continue or 'n' to exit ")
+
+        if user_input == 'n':
+            print("exiting the sneaker inventory log")
+            exit()
+
+        gather_sneaker_data()
+
+    # Call the function
+    sneaker_inventory_log()
 
