@@ -1,5 +1,27 @@
-import pandas as pd
-import os
+from dataclasses import dataclass, field
+
+@dataclass
+class Media:
+    purchase_date: str
+    retailer: str
+    media: str
+    speed: str
+    artist: str
+    album: str
+    variation: str
+    signed: str
+    edition: str
+    retail_price: float
+    resale_price: float
+    quantity: int = 1
+    profit_per: float = field(init=False)
+    profit: float = field(init=False)
+
+    def __post_init__(self):
+        # Calculate profit after the object is initialized
+        self.profit_per = self.resale_price - self.retail_price
+        self.profit = self.profit_per * self.quantity
+
 
 def media_inventory_log():
     purchase_date = input("Purchase date?: ")
@@ -25,39 +47,25 @@ def media_inventory_log():
     signed = input("Signed?: ")
     edition = input("Edition?: ")
     quantity = int(input("Quantity?: "))
-    retail = input("What did you pay?: ")
-    resale = input("Whats it worth?: ")
+    retail = int(input("What did you pay?: "))
+    resale = int(input("Whats it worth?: "))
 
-    # Calculating profit
-    profit_per = int(resale) - int(retail)
-    profit = (int(resale) - int(retail)) * quantity
+    # Creating an instance of the Media data class
+    media = Media(
+        purchase_date=purchase_date,
+        retailer=retailer.title(),
+        media=media,
+        speed=speed,
+        artist=artist,
+        album=album,
+        variation=variation,
+        signed=signed,
+        edition=edition,
+        retail_price=retail,
+        resale_price=resale,
+        quantity=quantity,
+    )
 
-    data = {
-        "Purchase date": purchase_date,
-        "Retailer": retailer.title(),
-        "Media": media,
-        "Speed": speed,
-        "Artist": artist.title(),
-        "Album": album.title(),
-        "Variation": variation,
-        "Signed?": signed.title(),
-        "Edition": edition,
-        "Quantity": quantity,
-        "Retail": retail,
-        "Resale": resale,
-        "Profit Per": profit_per,
-        "Profit": profit
-    }
+    from data_handling import save_media_data
+    save_media_data(media)
 
-    # Define the CSV file name
-    file_name = "media_inventory_log.csv"
-
-    # Check if the file exists
-    file_exists = os.path.isfile(file_name)
-
-    # Create a DataFrame from the data
-    df = pd.DataFrame([data])
-
-    # Write the data to a CSV file
-    # If the file exists, append the new data without writing the header
-    df.to_csv(file_name, mode='a', index=False, header=not file_exists)
