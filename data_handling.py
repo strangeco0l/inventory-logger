@@ -1,5 +1,6 @@
 import pandas as pd
 import os
+import sneaker_config
 
 
 def save_sneaker_data(data):
@@ -23,17 +24,17 @@ def save_sneaker_data(data):
                      "Retail Price", "Resale Price", "Profit Per", "Profit"])
         # Example new entry
         new_entry = {
-            "Purchase Date": purchase_date,
-            "Retailer": retailer,
-            "Size": size,
-            "Brand": brand,
-            "Model": model,
-            "Colorway": color_way,
-            "SKU": sku,
-            "Quantity": quantity,
-            "Retail Price": retail,
-            "Resale Price": resale,
-            "Profit": profit
+            "Purchase Date": sneaker_config.purchase_date,
+            "Retailer": sneaker_config.retailer,
+            "Size": sneaker_config.size,
+            "Brand": sneaker_config.brand,
+            "Model": sneaker_config.model,
+            "Colorway": sneaker_config.color_way,
+            "SKU": sneaker_config.sku,
+            "Quantity": sneaker_config.quantity,
+            "Retail Price": sneaker_config.retail,
+            "Resale Price": sneaker_config.resale,
+            "Profit": sneaker_config.profit
         }
 
         # Convert new_entry to a DataFrame

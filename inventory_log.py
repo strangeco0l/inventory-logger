@@ -1,6 +1,6 @@
 import pandas as pd
 import os
-import data_handling
+from data_handling import *
 
 
 def sneaker_inventory_log():
@@ -37,6 +37,8 @@ def sneaker_inventory_log():
         "Profit Per": profit_per,
         "Profit": profit
     }
+    save_sneaker_data(data)
+
 
 def media_inventory_log():
     purchase_date = input("Purchase date?: ")
@@ -141,14 +143,14 @@ def collectibles_inventory_log():
         df.to_csv(file_name, mode='a', index=False, header=not file_exists)
 
 
-# Call the function
-user_input = input("Enter 'Sneakers', or 'Media', or 'Collectibles' ")
-if user_input == 'Sneakers':
-    sneaker_inventory_log()
-elif user_input == 'Media':
-    media_inventory_log()
-elif user_input == 'Collectibles':
-    collectibles_inventory_log()
+if __name__ == "__main__":
+    user_input = input("Enter 'Sneakers', or 'Media', or 'Collectibles' ")
+    if user_input == 'Sneakers':
+        sneaker_inventory_log()
+    elif user_input == 'Media':
+        media_inventory_log()
+    elif user_input == 'Collectibles':
+        collectibles_inventory_log()
+    else:
+        print("Invalid Input")
 
-else:
-    print("Invalid Input")
