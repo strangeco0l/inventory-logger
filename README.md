@@ -14,8 +14,10 @@ I have plans to pick up a barcode scanner to make most of this input a little mo
 This is my first crack at Python, so there may be a myriad of mistakes, and room for improvement, but his
 project is not only for my personal use, but also my way of learning Python more fluently.
 
-
+# Requirements
+Python
+Pandas
 # How to use
 
 run python inventory_log.py
-follow prompts for the item that you are entering
+follow the prompts for the item that you are entering
