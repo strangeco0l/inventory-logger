@@ -20,26 +20,43 @@ class Collectibles:
 
 
 def collectibles_inventory_log():
-    purchase_date = input("Purchase date?: ")
-    retailer = input("Retailer?: ")
-    brand = input("Brand?: ")
-    item = input("Item?: ")
-    variation = input("Variation?: ")
-    quantity = int(input("Quantity?: "))
-    retail = int(input("What did you pay?: "))
-    resale = int(input("Whats it worth?: "))
 
-    collectibles = Collectibles(
-        purchase_date=purchase_date,
-        retailer=retailer.title(),
-        brand=brand.title(),
-        item=item.title(),
-        variation=variation,
-        retail_price=retail,
-        resale_price=resale,
-        quantity=quantity
-    )
+    def gather_collectibles_data():
+        purchase_date = input("Purchase date?: ")
+        retailer = input("Retailer?: ")
+        brand = input("Brand?: ")
+        item = input("Item?: ")
+        variation = input("Variation?: ")
+        quantity = int(input("Quantity?: "))
+        retail = int(input("What did you pay?: "))
+        resale = int(input("Whats it worth?: "))
 
-    from data_handling import save_collectibles_data
-    save_collectibles_data(collectibles)
+        collectibles = Collectibles(
+            purchase_date=purchase_date,
+            retailer=retailer.title(),
+            brand=brand.title(),
+            item=item.title(),
+            variation=variation,
+            retail_price=retail,
+            resale_price=resale,
+            quantity=quantity
+        )
+
+        from data_handling import save_collectibles_data
+        save_collectibles_data(collectibles)
+
+        print("Collectibles logged succesfully!\n")
+    gather_collectibles_data()
+
+    while True:
+        user_input = input("Continue? Type 'y to continue or 'n' to exit ")
+
+        if user_input == 'n':
+            print("exiting the collectibles inventory log")
+            exit()
+
+        gather_collectibles_data()
+
+    # Call the function
+    collectibles_inventory_log()
 

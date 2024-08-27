@@ -24,48 +24,67 @@ class Media:
 
 
 def media_inventory_log():
-    purchase_date = input("Purchase date?: ")
-    retailer = input("Retailer?: ")
-    # Collecting inputs from the user
-    media = input("Media type (Vinyl or CD)?: ")
 
-    # Initialize speed variable
-    speed = None
+    def gather_media_data():
+        purchase_date = input("Purchase date?: ")
+        retailer = input("Retailer?: ")
 
-    # Conditional logic based on media type
-    if media.lower() == 'vinyl':
-        speed = input("Vinyl speed?: ")
-    elif media.lower() == 'cd':
-        print("Skipping speed input for CD.")
-    else:
-        print("Invalid media type")
-        return  # Exit the function if the media type is not recognized
+        while True:
+            # Collecting inputs from the user
+            media = input("Media type (Vinyl or CD)?: ")
 
-    artist = input("Artist?: ")
-    album = input("Album?: ")
-    variation = input("Variation?: ")
-    signed = input("Signed?: ")
-    edition = input("Edition?: ")
-    quantity = int(input("Quantity?: "))
-    retail = int(input("What did you pay?: "))
-    resale = int(input("Whats it worth?: "))
+            # Initialize speed variable
+            speed = None
 
-    # Creating an instance of the Media data class
-    media = Media(
-        purchase_date=purchase_date,
-        retailer=retailer.title(),
-        media=media,
-        speed=speed,
-        artist=artist,
-        album=album,
-        variation=variation,
-        signed=signed,
-        edition=edition,
-        retail_price=retail,
-        resale_price=resale,
-        quantity=quantity,
-    )
+            # Conditional logic based on media type
+            if media.lower() == 'vinyl':
+                speed = input("Vinyl speed?: ")
+                break
+            elif media.lower() == 'cd':
+                print("Skipping speed input for CD.")
+                break
+            else:
+                print("Invalid media type, please try again. ")
 
-    from data_handling import save_media_data
-    save_media_data(media)
+        artist = input("Artist?: ")
+        album = input("Album?: ")
+        variation = input("Variation?: ")
+        signed = input("Signed?: ")
+        edition = input("Edition?: ")
+        quantity = int(input("Quantity?: "))
+        retail = int(input("What did you pay?: "))
+        resale = int(input("Whats it worth?: "))
+
+        # Creating an instance of the Media data class
+        media = Media(
+            purchase_date=purchase_date,
+            retailer=retailer.title(),
+            media=media,
+            speed=speed,
+            artist=artist,
+            album=album,
+            variation=variation,
+            signed=signed,
+            edition=edition,
+            retail_price=retail,
+            resale_price=resale,
+            quantity=quantity,
+        )
+
+        from data_handling import save_media_data
+        save_media_data(media)
+
+        print("Media logged succesfully!\n")
+    gather_media_data()
+
+    while True:
+        user_input = input("Continue? Type 'y' to continue or 'n' to exit ")
+
+        if user_input == 'n':
+            print("exiting the media log")
+            exit()
+
+        gather_media_data()
+
+    media_inventory_log()
 
