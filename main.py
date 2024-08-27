@@ -1,4 +1,16 @@
-from gui import create_main_window
+from sneaker_inventory_log import sneaker_inventory_log
+from media_inventory_log import media_inventory_log
+from collectibles_inventory_log import collectibles_inventory_log
 
-if __name__ == "__main__":
-    create_main_window()
+
+# Call the function
+user_input = input("Enter 'Sneakers', or 'Media', or 'Collectibles' ")
+if user_input == 'Sneakers':
+    sneaker_inventory_log()
+elif user_input == 'Media':
+    media_inventory_log()
+elif user_input == 'Collectibles':
+    collectibles_inventory_log()
+
+else:
+    print("Invalid Input")
