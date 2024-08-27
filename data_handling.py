@@ -1,6 +1,6 @@
 import pandas as pd
 import os
-import sneaker_config
+from inventory_log import sneaker_inventory_log
 
 
 def save_sneaker_data(data):
@@ -22,20 +22,6 @@ def save_sneaker_data(data):
         df = pd.DataFrame(
             columns=["Purchase Date", "Retailer", "Release Date", "Size", "Brand", "Model", "Colorway", "SKU", "Quantity",
                      "Retail Price", "Resale Price", "Profit Per", "Profit"])
-        # Example new entry
-        new_entry = {
-            "Purchase Date": sneaker_config.purchase_date,
-            "Retailer": sneaker_config.retailer,
-            "Size": sneaker_config.size,
-            "Brand": sneaker_config.brand,
-            "Model": sneaker_config.model,
-            "Colorway": sneaker_config.color_way,
-            "SKU": sneaker_config.sku,
-            "Quantity": sneaker_config.quantity,
-            "Retail Price": sneaker_config.retail,
-            "Resale Price": sneaker_config.resale,
-            "Profit": sneaker_config.profit
-        }
 
         # Convert new_entry to a DataFrame
         new_entry_df = pd.DataFrame([data])
@@ -57,3 +43,10 @@ def save_sneaker_data(data):
 
         # Save the updated DataFrame back to the CSV file
         df.to_csv(file_name, index=False)
+
+if __name__ == "__main__":
+    # Get the data from the user input
+    data = sneaker_inventory_log()
+
+    # Save the data
+    save_sneaker_data(data)

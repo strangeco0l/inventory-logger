@@ -1,5 +1,4 @@
 import tkinter as tk
-from tkinter import ttk
 from data_handling_example import save_sneaker_data, save_media_data
 
 def create_main_window():

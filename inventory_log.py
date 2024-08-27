@@ -1,9 +1,8 @@
 import pandas as pd
 import os
-from data_handling import *
-
 
 def sneaker_inventory_log():
+
     # Collecting inputs from the user
     purchase_date = input("Purchase date?: ")
     retailer = input("Retailer?: ")
@@ -13,8 +12,8 @@ def sneaker_inventory_log():
     model = input("Model?: ")
     color_way = input("CW?: ")
     sku = input("Sku?: ")
-    retail = input("What did you pay?: ")
-    resale = input("Whats it worth?: ")
+    retail = int(input("What did you pay?: "))
+    resale = int(input("Whats it worth?: "))
     quantity = int(input("Quantity?: "))
 
     # Calculating profit
@@ -37,7 +36,7 @@ def sneaker_inventory_log():
         "Profit Per": profit_per,
         "Profit": profit
     }
-    save_sneaker_data(data)
+    return data
 
 
 def media_inventory_log():
