@@ -1,0 +1,13 @@
+Metadata-Version: 2.1
+Name: logger
+Version: 0.0.0
+Summary: retail arbitrage inventory manager
+Author: Jahmar Davis
+Platform: unix
+Platform: linux
+Platform: osx
+Platform: cygwin
+Platform: win32
+Classifier: Programming Language :: Python :: 3.11
+Classifier: Programming Language :: Python :: 3.12
+Requires-Dist: pandas>=2

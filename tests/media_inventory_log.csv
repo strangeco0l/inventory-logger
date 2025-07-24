@@ -1,0 +1,7 @@
+Purchase Date,Retailer,Media,Speed,Artist,Album,Variation,Signed,Edition,Quantity,Retail Price,Resale Price,Profit Per,Profit
+2024-09-18,Amazon,Cd,,The Beatles,Revolver,Standard,No,Second,1.0,10.0,20.0,10.0,10.0
+2024-09-18,Best Buy,Vinyl,33.0,The Beatles,Abbey Road,Limited,Yes,First,2.0,40.0,80.0,40.0,80.0
+2024-09-18,Amazon,Cd,,The Beatles,Revolver,Standard,No,Second,1.0,10.0,20.0,10.0,10.0
+2024-09-18,Amazon,Cd,,The Beatles,Revolver,Standard,No,Second,1.0,10.0,20.0,10.0,10.0
+2024-09-18,Best Buy,Vinyl,33,The Beatles,Abbey Road,Limited,Yes,First,2.0,40.0,80.0,40.0,80.0
+Total Profit,,,,,,,,,,,,,190.0

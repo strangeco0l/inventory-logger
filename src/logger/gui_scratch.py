@@ -2,10 +2,10 @@ import tkinter as tk
 from tkinter import ttk, messagebox, filedialog
 from ttkthemes import ThemedTk
 from dataclasses import asdict
-from data_handling import save_sneaker_data, save_media_data, save_collectibles_data
-from sneaker_inventory_log import Sneaker
-from collectibles_inventory_log import Collectibles
-from media_inventory_log import Media
+from logger.data_handling import save_sneaker_data, save_media_data, save_collectibles_data
+from logger.sneaker_inventory_log import Sneaker
+from logger.collectibles_inventory_log import Collectibles
+from logger.media_inventory_log import Media
 
 
 # Assuming save functions add to these lists or you can adapt accordingly
@@ -354,6 +354,7 @@ class Media:
     quantity: int = 1
     profit_per: float = field(init=False)
     profit: float = field(init=False)
+
     def __post_init__(self):
         self.profit_per = self.resale_price - self.retail_price
         self.profit = self.profit_per * self.quantity

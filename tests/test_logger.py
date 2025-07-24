@@ -1,9 +1,8 @@
 import unittest
+from logger.sneaker_inventory_log import Sneaker, sneaker_inventory_log
+from logger.media_inventory_log import Media, gather_media_data
+from logger.collectibles_inventory_log import Collectibles
 from unittest.mock import patch
-from logger.sneaker_inventory_log import *
-from logger.media_inventory_log import *
-from logger.media_inventory_log import gather_media_data
-from logger.collectibles_inventory_log import *
 
 
 class TestSneaker(unittest.TestCase):
@@ -22,7 +21,6 @@ class TestSneaker(unittest.TestCase):
             resale_price=150.00,
             quantity=2
         )
-
         self.assertEqual(sneaker.profit_per, 50.00)
         self.assertEqual(sneaker.profit, 100.00)
 
@@ -40,14 +38,13 @@ class TestSneaker(unittest.TestCase):
             resale_price=120.00,
             quantity=1
         )
-
         self.assertEqual(sneaker.profit_per, 20.00)
         self.assertEqual(sneaker.profit, 20.00)
 
 
 class TestMedia(unittest.TestCase):
-    def test_vinyl_initialization(self):
 
+    def test_vinyl_initialization(self):
         media = Media(
             purchase_date="2024-09-18",
             retailer="Target",
@@ -61,8 +58,7 @@ class TestMedia(unittest.TestCase):
             retail_price=30.00,
             resale_price=40.00,
             quantity=2
-            )
-
+        )
         self.assertEqual(media.profit_per, 10)
         self.assertEqual(media.profit, 20.00)
 
@@ -81,58 +77,43 @@ class TestMedia(unittest.TestCase):
             resale_price=40.00,
             quantity=1
         )
-
         self.assertEqual(media.profit_per, 10)
         self.assertEqual(media.profit, 10.00)
 
 
-# This is not working as expected, need to do more research
-# class TestGatherMediaData(unittest.TestCase):
-#
-#     @patch('builtins.input', side_effect=[
-#         '2024-09-18',  # Purchase date
-#         'Best Buy',    # Retailer
-#         'Vinyl',       # Media type
-#         '33',          # Vinyl speed
-#         'The Beatles', # Artist
-#         'Abbey Road',  # Album
-#         'Limited',     # Variation
-#         'Yes',         # Signed
-#         'First',       # Edition
-#         '2',           # Quantity
-#         '40',          # Retail price
-#         '80'           # Resale price
-#     ])
-#     def test_gather_media_data_vinyl(self, mock_input):
-#         # Run the function
-#         gather_media_data()
-#
-#         # Here you could add assertions based on expected behavior
-#         # For example, assert that the inputs were used in the correct order
-#         # or that no unexpected breaks occurred.
-#
-#     @patch('builtins.input', side_effect=[
-#         '2024-09-18',  # Purchase date
-#         'Amazon',      # Retailer
-#         'CD',          # Media type
-#         'The Beatles', # Artist
-#         'Revolver',    # Album
-#         'Standard',    # Variation
-#         'No',          # Signed
-#         'Second',      # Edition
-#         '1',           # Quantity
-#         '10',          # Retail price
-#         '20'           # Resale price
-#     ])
-#     def test_gather_media_data_cd(self, mock_input):
-#         # Run the function
-#         gather_media_data()
-#
-#         # Again, you could add further assertions depending on the
-#         # expected behavior, like checking that the speed prompt is skipped.
+class TestGatherMediaData(unittest.TestCase):
+
+    @patch('builtins.input', side_effect=[
+        '2024-09-18', 'Best Buy', 'Vinyl', '33',
+        'The Beatles', 'Abbey Road', 'Limited', 'Yes', 'First',
+        '2', '40', '80'
+    ])
+    def test_gather_media_data_vinyl(self, mock_input):
+        media = gather_media_data()
+        self.assertEqual(media.media.lower(), 'vinyl')
+        self.assertEqual(media.speed, '33')
+        self.assertEqual(media.artist, 'The Beatles')
+        self.assertEqual(media.quantity, 2)
+        self.assertAlmostEqual(media.retail_price, 40.0)
+        self.assertAlmostEqual(media.resale_price, 80.0)
+
+    @patch('builtins.input', side_effect=[
+        '2024-09-18', 'Amazon', 'CD',
+        'The Beatles', 'Revolver', 'Standard', 'No', 'Second',
+        '1', '10', '20'
+    ])
+    def test_gather_media_data_cd(self, mock_input):
+        media = gather_media_data()
+        self.assertEqual(media.media.lower(), 'cd')
+        self.assertEqual(media.speed, 'N/A')
+        self.assertEqual(media.album, 'Revolver')
+        self.assertEqual(media.quantity, 1)
+        self.assertAlmostEqual(media.retail_price, 10.0)
+        self.assertAlmostEqual(media.resale_price, 20.0)
 
 
 class TestCollectibles(unittest.TestCase):
+
     def test_collectibles_initialization(self):
         collectibles = Collectibles(
             purchase_date="2024-09-18",
@@ -143,11 +124,9 @@ class TestCollectibles(unittest.TestCase):
             retail_price=9.99,
             resale_price=99.99,
             quantity=2,
-
         )
-
-        self.assertEqual(collectibles.profit_per, 90.00)
-        self.assertEqual(collectibles.profit, 180.00)
+        self.assertAlmostEqual(collectibles.profit_per, 90.00, places=2)
+        self.assertAlmostEqual(collectibles.profit, 180.00, places=2)
 
     def test_single_quantity_collectibles_profit(self):
         collectibles = Collectibles(
@@ -159,30 +138,25 @@ class TestCollectibles(unittest.TestCase):
             retail_price=9.99,
             resale_price=99.99,
             quantity=1,
-
         )
-
         self.assertEqual(collectibles.profit_per, 90.00)
         self.assertEqual(collectibles.profit, 90.00)
 
 
+class TestSneakerInventoryLog(unittest.TestCase):
 
+    @patch('logger.sneaker_inventory_log.save_sneaker_data')
     @patch('builtins.input', side_effect=[
         '2024-09-18', 'Nike', '2024-08-01', '10', 'Nike',
         'Air Max', 'Red/White', 'AM123', '100', '150', '2', 'n'
     ])
-    @patch('logger.data_handling')
-    def test_sneaker_inventory_log(self, mock_save, mock_input):
+    def test_sneaker_inventory_log(self, mock_input, mock_save):
+        sneaker_inventory_log()
 
-        # Assert that save_sneaker_data was called once
-        self.assertEqual(mock_save.call_count, 0, "save_sneaker_data was not called")
-
-        if mock_save.call_count > 0:
-
-            # Check the arguments passed to save_sneaker_data
-            saved_sneaker = mock_save.call_args[0][0]
-            self.assertEqual(saved_sneaker.profit_per, 50.00)
-            self.assertEqual(saved_sneaker.profit, 100.00)
+        self.assertEqual(mock_save.call_count, 1)
+        sneaker_obj = mock_save.call_args[0][0]
+        self.assertEqual(sneaker_obj.profit_per, 50.00)
+        self.assertEqual(sneaker_obj.profit, 100.00)
 
 
 if __name__ == '__main__':
