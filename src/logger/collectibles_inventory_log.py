@@ -1,5 +1,5 @@
 from dataclasses import dataclass, field
-from data_handling import save_collectibles_data
+from logger.data_handling import save_collectibles_data
 
 @dataclass
 class Collectibles:

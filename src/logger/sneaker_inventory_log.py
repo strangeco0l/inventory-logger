@@ -1,5 +1,6 @@
+from logger.data_handling import save_sneaker_data
 from dataclasses import dataclass, field
-from data_handling import save_sneaker_data  # Import at top
+
 
 @dataclass
 class Sneaker:
