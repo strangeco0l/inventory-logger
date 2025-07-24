@@ -1,4 +1,5 @@
 from dataclasses import dataclass, field
+from data_handling import save_sneaker_data  # Import at top
 
 @dataclass
 class Sneaker:
@@ -17,59 +18,48 @@ class Sneaker:
     profit: float = field(init=False)
 
     def __post_init__(self):
-        # Calculate profit after the object is initialized
         self.profit_per = self.resale_price - self.retail_price
         self.profit = self.profit_per * self.quantity
 
 
-def sneaker_inventory_log():
-    # function to gather sneaker data
-    def gather_sneaker_data():
-        purchase_date = input("Purchase date?: ")
-        retailer = input("Retailer?: ")
-        release_date = input("Release date?: ")
-        size = input("What size?: ")
-        brand = input("Brand?: ")
-        model = input("Model?: ")
-        color_way = input("CW?: ")
-        sku = input("Sku?: ")
-        retail = float(input("What did you pay?: "))
-        resale = float(input("Whats it worth?: "))
-        quantity = int(input("Quantity?: "))
-
-        # Creating an instance of the Sneaker data class
-        sneaker = Sneaker(
-            purchase_date=purchase_date,
-            retailer=retailer.title(),
-            release_date=release_date,
-            size=size,
-            brand=brand.title(),
-            model=model.title(),
-            colorway=color_way.title(),
-            sku=sku,
-            retail_price=retail,
-            resale_price=resale,
-            quantity=quantity
-        )
-
-        # Save the sneaker data
-        from data_handling import save_sneaker_data
-        save_sneaker_data(sneaker)
-
-        print("Sneaker logged succesfully!\n")
-    # Collect the first set of information outside the loop
-    gather_sneaker_data()
-
-    # Now enter the loop to log additional sneakers
+def get_validated_input(prompt, cast_type=str, allow_empty=False):
     while True:
-        user_input = input("Continue? Type 'y to continue or 'n' to exit ")
+        user_input = input(prompt).strip()
+        if not user_input and not allow_empty:
+            print("Input cannot be empty. Please try again.")
+            continue
+        try:
+            return cast_type(user_input)
+        except ValueError:
+            print(f"Please enter a valid {cast_type.__name__}.")
 
-        if user_input == 'n':
-            print("exiting the sneaker inventory log")
-            exit()
 
+def gather_sneaker_data():
+    print("\n--- Enter Sneaker Info ---")
+    sneaker = Sneaker(
+        purchase_date=get_validated_input("Purchase date?: "),
+        retailer=get_validated_input("Retailer?: ").title(),
+        release_date=get_validated_input("Release date?: "),
+        size=get_validated_input("What size?: "),
+        brand=get_validated_input("Brand?: ").title(),
+        model=get_validated_input("Model?: ").title(),
+        colorway=get_validated_input("CW?: ").title(),
+        sku=get_validated_input("SKU?: "),
+        retail_price=get_validated_input("What did you pay?: $", float),
+        resale_price=get_validated_input("What's it worth?: $", float),
+        quantity=get_validated_input("Quantity?: ", int)
+    )
+
+    save_sneaker_data(sneaker)
+    print("✅ Sneaker logged successfully!\n")
+
+
+def sneaker_inventory_log():
+    print("📦 Sneaker Inventory Logger Started\n")
+    while True:
         gather_sneaker_data()
 
-    # Call the function
-    sneaker_inventory_log()
-
+        user_input = input("Add another? (y/n): ").strip().lower()
+        if user_input == 'n':
+            print("👟 Exiting Sneaker Inventory Log.\n")
+            break

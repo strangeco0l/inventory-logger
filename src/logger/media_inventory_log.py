@@ -1,4 +1,5 @@
 from dataclasses import dataclass, field
+from data_handling import save_media_data
 
 @dataclass
 class Media:
@@ -18,73 +19,67 @@ class Media:
     profit: float = field(init=False)
 
     def __post_init__(self):
-        # Calculate profit after the object is initialized
         self.profit_per = self.resale_price - self.retail_price
         self.profit = self.profit_per * self.quantity
 
 
-def media_inventory_log():
-
-    def gather_media_data():
-        purchase_date = input("Purchase date?: ")
-        retailer = input("Retailer?: ")
-
-        while True:
-            # Collecting inputs from the user
-            media = input("Media type (Vinyl or CD)?: ")
-
-            # Initialize speed variable
-            speed = None
-
-            # Conditional logic based on media type
-            if media.lower() == 'vinyl':
-                speed = input("Vinyl speed?: ")
-                break
-            elif media.lower() == 'cd':
-                print("Skipping speed input for CD.")
-                break
-            else:
-                print("Invalid media type, please try again. ")
-
-        artist = input("Artist?: ")
-        album = input("Album?: ")
-        variation = input("Variation?: ")
-        signed = input("Signed?: ")
-        edition = input("Edition?: ")
-        quantity = int(input("Quantity?: "))
-        retail = int(input("What did you pay?: "))
-        resale = int(input("Whats it worth?: "))
-
-        # Creating an instance of the Media data class
-        media = Media(
-            purchase_date=purchase_date,
-            retailer=retailer.title(),
-            media=media,
-            speed=speed,
-            artist=artist,
-            album=album,
-            variation=variation,
-            signed=signed,
-            edition=edition,
-            retail_price=retail,
-            resale_price=resale,
-            quantity=quantity,
-        )
-
-        from data_handling import save_media_data
-        save_media_data(media)
-
-        print("Media logged succesfully!\n")
-    gather_media_data()
-
+def get_validated_input(prompt, cast_type=str, allow_empty=False, valid_values=None):
     while True:
-        user_input = input("Continue? Type 'y' to continue or 'n' to exit ")
+        value = input(prompt).strip()
+        if not value and not allow_empty:
+            print("Input cannot be empty.")
+            continue
+        try:
+            value = cast_type(value)
+            if valid_values and value.lower() not in [v.lower() for v in valid_values]:
+                print(f"Invalid input. Expected one of: {', '.join(valid_values)}")
+                continue
+            return value
+        except ValueError:
+            print(f"Please enter a valid {cast_type.__name__}.")
 
-        if user_input == 'n':
-            print("exiting the media log")
-            exit()
 
+def gather_media_data():
+    print("\n--- Enter Media Info ---")
+    purchase_date = get_validated_input("Purchase date?: ")
+    retailer = get_validated_input("Retailer?: ").title()
+
+    media_type = get_validated_input("Media type (Vinyl or CD)?: ", str, valid_values=['vinyl', 'cd'])
+    speed = get_validated_input("Vinyl speed?: ") if media_type.lower() == 'vinyl' else "N/A"
+
+    artist = get_validated_input("Artist?: ")
+    album = get_validated_input("Album?: ")
+    variation = get_validated_input("Variation?: ")
+    signed = get_validated_input("Signed?: ")
+    edition = get_validated_input("Edition?: ")
+    quantity = get_validated_input("Quantity?: ", int)
+    retail_price = get_validated_input("What did you pay?: $", float)
+    resale_price = get_validated_input("What's it worth?: $", float)
+
+    media = Media(
+        purchase_date=purchase_date,
+        retailer=retailer,
+        media=media_type.title(),
+        speed=speed,
+        artist=artist,
+        album=album,
+        variation=variation,
+        signed=signed,
+        edition=edition,
+        retail_price=retail_price,
+        resale_price=resale_price,
+        quantity=quantity
+    )
+
+    save_media_data(media)
+    print("✅ Media logged successfully!\n")
+
+
+def media_inventory_log():
+    print("📀 Media Inventory Logger Started\n")
+    while True:
         gather_media_data()
-
-    media_inventory_log()
-
+        user_input = input("Log another media item? (y/n): ").strip().lower()
+        if user_input == 'n':
+            print("🛑 Exiting Media Inventory Log.\n")
+            break

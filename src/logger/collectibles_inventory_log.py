@@ -1,4 +1,5 @@
 from dataclasses import dataclass, field
+from data_handling import save_collectibles_data
 
 @dataclass
 class Collectibles:
@@ -14,49 +15,53 @@ class Collectibles:
     profit: float = field(init=False)
 
     def __post_init__(self):
-        # Calculate profit after the object is initialized
         self.profit_per = self.resale_price - self.retail_price
         self.profit = self.profit_per * self.quantity
 
 
-def collectibles_inventory_log():
-
-    def gather_collectibles_data():
-        purchase_date = input("Purchase date?: ")
-        retailer = input("Retailer?: ")
-        brand = input("Brand?: ")
-        item = input("Item?: ")
-        variation = input("Variation?: ")
-        quantity = int(input("Quantity?: "))
-        retail = int(input("What did you pay?: "))
-        resale = int(input("Whats it worth?: "))
-
-        collectibles = Collectibles(
-            purchase_date=purchase_date,
-            retailer=retailer.title(),
-            brand=brand.title(),
-            item=item.title(),
-            variation=variation,
-            retail_price=retail,
-            resale_price=resale,
-            quantity=quantity
-        )
-
-        from data_handling import save_collectibles_data
-        save_collectibles_data(collectibles)
-
-        print("Collectibles logged succesfully!\n")
-    gather_collectibles_data()
-
+def get_validated_input(prompt, cast_type=str, allow_empty=False):
     while True:
-        user_input = input("Continue? Type 'y to continue or 'n' to exit ")
+        value = input(prompt).strip()
+        if not value and not allow_empty:
+            print("Input cannot be empty.")
+            continue
+        try:
+            return cast_type(value)
+        except ValueError:
+            print(f"Invalid input. Please enter a valid {cast_type.__name__}.")
 
-        if user_input == 'n':
-            print("exiting the collectibles inventory log")
-            exit()
 
+def gather_collectibles_data():
+    print("\n--- Enter Collectible Info ---")
+    purchase_date = get_validated_input("Purchase date?: ")
+    retailer = get_validated_input("Retailer?: ").title()
+    brand = get_validated_input("Brand?: ").title()
+    item = get_validated_input("Item?: ").title()
+    variation = get_validated_input("Variation?: ")
+    quantity = get_validated_input("Quantity?: ", int)
+    retail_price = get_validated_input("What did you pay?: $", float)
+    resale_price = get_validated_input("What's it worth?: $", float)
+
+    collectible = Collectibles(
+        purchase_date=purchase_date,
+        retailer=retailer,
+        brand=brand,
+        item=item,
+        variation=variation,
+        retail_price=retail_price,
+        resale_price=resale_price,
+        quantity=quantity
+    )
+
+    save_collectibles_data(collectible)
+    print("✅ Collectible logged successfully!\n")
+
+
+def collectibles_inventory_log():
+    print("🧸 Collectibles Inventory Logger Started\n")
+    while True:
         gather_collectibles_data()
-
-    # Call the function
-    collectibles_inventory_log()
-
+        user_input = input("Log another collectible? (y/n): ").strip().lower()
+        if user_input == 'n':
+            print("📦 Exiting Collectibles Inventory Log.\n")
+            break

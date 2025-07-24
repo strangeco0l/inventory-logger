@@ -1,0 +1,4 @@
+Purchase Date,Retailer,Release Date,Size,Brand,Model,Colorway,SKU,Quantity,Retail Price,Resale Price,Profit Per,Profit
+today,Footlocker,yesterday,10.5,Nike,Air Max 95,Neon,,1.0,150.0,300.0,150.0,150.0
+10-11-23,Footlocker,10/02/22,10.5,Nike,Air Max 95,Neon,n/a,1.0,150.0,300.0,150.0,150.0
+Total Profit,,,,,,,,,,,,300.0
