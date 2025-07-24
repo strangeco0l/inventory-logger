@@ -1,5 +1,5 @@
 from dataclasses import dataclass, field
-from data_handling import save_media_data
+from logger.data_handling import save_media_data
 
 @dataclass
 class Media:
@@ -73,6 +73,9 @@ def gather_media_data():
 
     save_media_data(media)
     print("✅ Media logged successfully!\n")
+
+    return media  # <-- add this line
+
 
 
 def media_inventory_log():
