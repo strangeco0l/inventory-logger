@@ -1,26 +1,6 @@
-from dataclasses import dataclass, field
+from logger.models import Media
 from logger.data_handling import save_media_data
-
-@dataclass
-class Media:
-    purchase_date: str
-    retailer: str
-    media: str
-    speed: str
-    artist: str
-    album: str
-    variation: str
-    signed: str
-    edition: str
-    retail_price: float
-    resale_price: float
-    quantity: int = 1
-    profit_per: float = field(init=False)
-    profit: float = field(init=False)
-
-    def __post_init__(self):
-        self.profit_per = self.resale_price - self.retail_price
-        self.profit = self.profit_per * self.quantity
+from .supabase_client import supabase
 
 
 def get_validated_input(prompt, cast_type=str, allow_empty=False, valid_values=None):
@@ -86,3 +66,24 @@ def media_inventory_log():
         if user_input == 'n':
             print("🛑 Exiting Media Inventory Log.\n")
             break
+
+
+def save_media_to_supabase(media):
+    data = {
+        "purchase_date": media.purchase_date,
+        "retailer": media.retailer,
+        "media_type": media.media_type,  # "Vinyl" or "CD"
+        "speed": media.speed,            # "33 1/3", "45", etc.
+        "artist": media.artist,
+        "album": media.album,
+        "variation": media.variation,
+        "signed": media.signed,
+        "edition": media.edition,
+        "retail_price": media.retail_price,
+        "resale_price": media.resale_price,
+        "quantity": media.quantity,
+        "profit_per": media.profit_per,
+        "profit": media.profit
+    }
+    supabase.table("media").insert(data).execute()
+

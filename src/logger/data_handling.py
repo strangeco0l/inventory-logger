@@ -23,6 +23,7 @@ def save_sneaker_data(sneaker):
 
     # Explicitly map the attributes of the Sneaker instance to the expected column names
     new_entry = {
+        "User ID": sneaker.user_id,
         "Purchase Date": sneaker.purchase_date,
         "Retailer": sneaker.retailer,
         "Release Date": sneaker.release_date,
@@ -82,6 +83,7 @@ def save_collectibles_data(collectibles):
 
     # Example new entry
     new_entry = {
+        "User ID": collectibles.user_id,
         "Purchase Date": collectibles.purchase_date,
         "Retailer": collectibles.retailer,
         "Brand": collectibles.brand,
@@ -137,6 +139,7 @@ def save_media_data(media):
 
     # Example new entry
     new_entry = {
+        "User ID": media.user_id,
         "Purchase Date": media.purchase_date,
         "Retailer": media.retailer,
         "Media": media.media,

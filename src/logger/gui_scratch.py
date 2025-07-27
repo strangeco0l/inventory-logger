@@ -1,19 +1,36 @@
 import tkinter as tk
+from html import parser as csv
 from tkinter import ttk, messagebox, filedialog
 from ttkthemes import ThemedTk
 from dataclasses import asdict
 from logger.data_handling import save_sneaker_data, save_media_data, save_collectibles_data
-from logger.sneaker_inventory_log import Sneaker
+from logger.sneaker_inventory_log import save_sneaker_to_supabase
 from logger.collectibles_inventory_log import Collectibles
 from logger.media_inventory_log import Media
+from supabase_client import create_client, Client
+# Your dataclasses (unchanged) here or import from your module
+from dataclasses import dataclass, field
+from dotenv import load_dotenv
+import os
+import inspect
+from logger.models import Sneaker, Collectibles, Media
+
+# print(inspect.getsource(Sneaker))
+
+
+# Initialize Supabase client once in your app
+SUPABASE_URL = os.getenv("SUPABASE_URL")
+SUPABASE_KEY = os.getenv("SUPABASE_KEY")
+supabase: Client = create_client(SUPABASE_URL, SUPABASE_KEY)
 
 
 # Assuming save functions add to these lists or you can adapt accordingly
 class InventoryApp:
     def __init__(self, root):
         self.root = root
+        self.user_id = None
         self.root.title("Inventory Manager")
-        self.root.geometry("900x600")
+        self.root.geometry("1800x900")
         self.root.resizable(False, False)
 
         self.custom_font = ("Segoe UI", 10)
@@ -49,6 +66,53 @@ class InventoryApp:
 
         # Setup spreadsheet tab
         self.build_spreadsheet_tab()
+
+        # Add login tab
+        self.login_frame = ttk.Frame(self.notebook, padding=15)
+        self.notebook.add(self.login_frame, text="Login")
+
+        self.build_login_form()
+
+        # Disable all tabs except Login until user logs in
+        for i in range(self.notebook.index("end") - 1):  # all but last tab (Login)
+            self.notebook.tab(i, state='disabled')
+
+        self.user = None  # store logged-in user
+
+    def build_login_form(self):
+        ttk.Label(self.login_frame, text="Email:").grid(row=0, column=0, sticky='w', pady=5)
+        self.email_entry = ttk.Entry(self.login_frame, width=40)
+        self.email_entry.grid(row=0, column=1, pady=5)
+
+        ttk.Label(self.login_frame, text="Password:").grid(row=1, column=0, sticky='w', pady=5)
+        self.password_entry = ttk.Entry(self.login_frame, width=40, show='*')
+        self.password_entry.grid(row=1, column=1, pady=5)
+
+        login_btn = ttk.Button(self.login_frame, text="Login", command=self.login)
+        login_btn.grid(row=2, column=1, sticky='e', pady=10)
+
+    def login(self):
+        email = self.email_entry.get().strip()
+        password = self.password_entry.get().strip()
+        if not email or not password:
+            messagebox.showerror("Login Error", "Email and password cannot be empty.")
+            return
+
+        try:
+            response = supabase.auth.sign_in_with_password({"email": email, "password": password})
+            if response.user:
+                self.user = response.user
+                messagebox.showinfo("Success", f"Logged in as {self.user.email}")
+                self.user_id = self.user.id
+                # Enable other tabs
+                for i in range(self.notebook.index("end") - 1):
+                    self.notebook.tab(i, state='normal')
+                # Optionally switch to first tab after login
+                self.notebook.select(0)
+            else:
+                messagebox.showerror("Login Failed", "Invalid email or password.")
+        except Exception as e:
+            messagebox.showerror("Login Failed", str(e))
 
     # ... [build_sneaker_form(), build_media_form(), build_collectibles_form(), _build_form() same as before] ...
 
@@ -111,8 +175,14 @@ class InventoryApp:
                 "resale_price": float,
                 "quantity": int
             })
-            item = Sneaker(**data)
-            save_sneaker_data(item)
+
+            item = Sneaker(user_id=self.user.id, **data)
+
+            # Pass self.user.id (or self.user_id if stored) to save_sneaker_to_supabase
+            save_sneaker_to_supabase(item)
+
+            save_sneaker_data(item)  # your local save function if needed
+
             self.sneaker_data.append(asdict(item))  # Add to in-memory list
             messagebox.showinfo("Success", "Sneaker data saved successfully!")
             self._clear_fields(self.sneaker_fields)
@@ -314,66 +384,6 @@ class InventoryApp:
             messagebox.showinfo("Export CSV", f"Data exported successfully to:\n{file_path}")
         except Exception as e:
             messagebox.showerror("Export CSV Error", str(e))
-
-
-# Your dataclasses (unchanged) here or import from your module
-from dataclasses import dataclass, field
-
-@dataclass
-class Sneaker:
-    purchase_date: str
-    retailer: str
-    release_date: str
-    size: str
-    brand: str
-    model: str
-    colorway: str
-    sku: str
-    retail_price: float
-    resale_price: float
-    quantity: int = 1
-    profit_per: float = field(init=False)
-    profit: float = field(init=False)
-    def __post_init__(self):
-        self.profit_per = self.resale_price - self.retail_price
-        self.profit = self.profit_per * self.quantity
-
-@dataclass
-class Media:
-    purchase_date: str
-    retailer: str
-    media_type: str
-    speed: str
-    artist: str
-    album: str
-    variation: str
-    signed: str
-    edition: str
-    retail_price: float
-    resale_price: float
-    quantity: int = 1
-    profit_per: float = field(init=False)
-    profit: float = field(init=False)
-
-    def __post_init__(self):
-        self.profit_per = self.resale_price - self.retail_price
-        self.profit = self.profit_per * self.quantity
-
-@dataclass
-class Collectibles:
-    purchase_date: str
-    retailer: str
-    brand: str
-    item: str
-    variation: str
-    retail_price: float
-    resale_price: float
-    quantity: int = 1
-    profit_per: float = field(init=False)
-    profit: float = field(init=False)
-    def __post_init__(self):
-        self.profit_per = self.resale_price - self.retail_price
-        self.profit = self.profit_per * self.quantity
 
 
 if __name__ == "__main__":

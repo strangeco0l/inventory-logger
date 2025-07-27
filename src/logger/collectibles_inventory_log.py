@@ -1,22 +1,6 @@
-from dataclasses import dataclass, field
+from logger.models import Collectibles
 from logger.data_handling import save_collectibles_data
-
-@dataclass
-class Collectibles:
-    purchase_date: str
-    retailer: str
-    brand: str
-    item: str
-    variation: str
-    retail_price: float
-    resale_price: float
-    quantity: int = 1
-    profit_per: float = field(init=False)
-    profit: float = field(init=False)
-
-    def __post_init__(self):
-        self.profit_per = self.resale_price - self.retail_price
-        self.profit = self.profit_per * self.quantity
+from .supabase_client import supabase
 
 
 def get_validated_input(prompt, cast_type=str, allow_empty=False):
@@ -65,3 +49,20 @@ def collectibles_inventory_log():
         if user_input == 'n':
             print("📦 Exiting Collectibles Inventory Log.\n")
             break
+
+
+def save_collectible_to_supabase(collectible):
+    data = {
+        "purchase_date": collectible.purchase_date,
+        "retailer": collectible.retailer,
+        "brand": collectible.brand,
+        "item": collectible.item,
+        "variation": collectible.variation,
+        "retail_price": collectible.retail_price,
+        "resale_price": collectible.resale_price,
+        "quantity": collectible.quantity,
+        "profit_per": collectible.profit_per,
+        "profit": collectible.profit
+    }
+    supabase.table("collectibles").insert(data).execute()
+
