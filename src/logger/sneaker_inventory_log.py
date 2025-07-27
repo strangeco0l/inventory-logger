@@ -1,26 +1,26 @@
 from logger.data_handling import save_sneaker_data
-from dataclasses import dataclass, field
+from logger.models import Sneaker
+from .supabase_client import supabase
 
 
-@dataclass
-class Sneaker:
-    purchase_date: str
-    retailer: str
-    release_date: str
-    size: str
-    brand: str
-    model: str
-    colorway: str
-    sku: str
-    retail_price: float
-    resale_price: float
-    quantity: int = 1
-    profit_per: float = field(init=False)
-    profit: float = field(init=False)
-
-    def __post_init__(self):
-        self.profit_per = self.resale_price - self.retail_price
-        self.profit = self.profit_per * self.quantity
+def save_sneaker_to_supabase(sneaker):
+    data = {
+        "user_id": sneaker.user_id,  # <-- Include user_id here
+        "purchase_date": sneaker.purchase_date,
+        "retailer": sneaker.retailer,
+        "release_date": sneaker.release_date,
+        "size": sneaker.size,
+        "brand": sneaker.brand,
+        "model": sneaker.model,
+        "colorway": sneaker.colorway,
+        "sku": sneaker.sku,
+        "retail_price": sneaker.retail_price,
+        "resale_price": sneaker.resale_price,
+        "quantity": sneaker.quantity,
+        "profit_per": sneaker.profit_per,
+        "profit": sneaker.profit
+    }
+    supabase.table("sneakers").insert(data).execute()
 
 
 def get_validated_input(prompt, cast_type=str, allow_empty=False):
@@ -35,9 +35,10 @@ def get_validated_input(prompt, cast_type=str, allow_empty=False):
             print(f"Please enter a valid {cast_type.__name__}.")
 
 
-def gather_sneaker_data():
+def gather_sneaker_data(user_id):
     print("\n--- Enter Sneaker Info ---")
     sneaker = Sneaker(
+        user_id=user_id,
         purchase_date=get_validated_input("Purchase date?: "),
         retailer=get_validated_input("Retailer?: ").title(),
         release_date=get_validated_input("Release date?: "),
@@ -51,16 +52,19 @@ def gather_sneaker_data():
         quantity=get_validated_input("Quantity?: ", int)
     )
 
-    save_sneaker_data(sneaker)
+    save_sneaker_to_supabase(sneaker)  # pass user_id here
     print("✅ Sneaker logged successfully!\n")
 
 
-def sneaker_inventory_log():
+def sneaker_inventory_log(user_id):
     print("📦 Sneaker Inventory Logger Started\n")
     while True:
-        gather_sneaker_data()
+        gather_sneaker_data(user_id)
 
         user_input = input("Add another? (y/n): ").strip().lower()
         if user_input == 'n':
             print("👟 Exiting Sneaker Inventory Log.\n")
             break
+
+
+
