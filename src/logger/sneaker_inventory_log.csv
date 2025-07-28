@@ -1,5 +1,6 @@
 Purchase Date,Retailer,Release Date,Size,Brand,Model,Colorway,SKU,Quantity,Retail Price,Resale Price,Profit Per,Profit,User ID
 today,Footlocker,yesterday,10.5,Nike,Air Max 95,Neon,,1.0,150.0,300.0,150.0,150.0,
 10-11-23,Footlocker,10/02/22,10.5,Nike,Air Max 95,Neon,,1.0,150.0,300.0,150.0,150.0,
-7/21/25,ftl,7/21/25,10.5,nike,aairmax,neon,123,1.0,100.0,125.0,25.0,25.0,2d3fe192-ea1e-43c7-b692-84bfd8c37d79
-Total Profit,,,,,,,,,,,,325.0,
+7/21/25,ftl,7/21/25,10.5,nike,aairmax,neon,123.0,1.0,100.0,125.0,25.0,25.0,2d3fe192-ea1e-43c7-b692-84bfd8c37d79
+7/25/25,ftl,7/21/25,10,n,w,w,k,1.0,100.0,102.0,2.0,2.0,2d3fe192-ea1e-43c7-b692-84bfd8c37d79
+Total Profit,,,,,,,,,,,,327.0,

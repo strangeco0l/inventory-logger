@@ -1,21 +1,17 @@
+import os
+import csv
 import tkinter as tk
-from html import parser as csv
 from tkinter import ttk, messagebox, filedialog
 from ttkthemes import ThemedTk
 from dataclasses import asdict
+from dotenv import load_dotenv
+
 from logger.data_handling import save_sneaker_data, save_media_data, save_collectibles_data
 from logger.sneaker_inventory_log import save_sneaker_to_supabase
-from logger.collectibles_inventory_log import Collectibles
-from logger.media_inventory_log import Media
-from supabase_client import create_client, Client
-# Your dataclasses (unchanged) here or import from your module
-from dataclasses import dataclass, field
-from dotenv import load_dotenv
-import os
-import inspect
+from logger.collectibles_inventory_log import save_collectibles_to_supabase
+from logger.media_inventory_log import save_media_to_supabase
 from logger.models import Sneaker, Collectibles, Media
-
-# print(inspect.getsource(Sneaker))
+from supabase_client import create_client, Client
 
 
 # Initialize Supabase client once in your app
@@ -206,7 +202,7 @@ class InventoryApp:
                 "resale_price": float,
                 "quantity": int
             })
-            item = Media(**data)
+            item = Media(user_id=self.user.id, **data)
             save_media_data(item)
             self.media_data.append(asdict(item))
             messagebox.showinfo("Success", "Media data saved successfully!")
@@ -227,7 +223,7 @@ class InventoryApp:
                 "resale_price": float,
                 "quantity": int
             })
-            item = Collectibles(**data)
+            item = Collectibles(user_id=self.user.id, **data)
             save_collectibles_data(item)
             self.collectibles_data.append(asdict(item))
             messagebox.showinfo("Success", "Collectible data saved successfully!")
