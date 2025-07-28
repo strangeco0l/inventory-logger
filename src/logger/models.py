@@ -18,6 +18,11 @@ class Sneaker:
     profit_per: float = field(init=False)
     profit: float = field(init=False)
 
+
+def fetch_user_sneakers(user_id, supabase):
+    response = supabase.table("sneakers").select("*").eq("user_id", user_id).execute()
+    return [Sneaker(**entry) for entry in response.data]
+
     def __post_init__(self):
         print("using updated sneaker class with user_id!")
         self.profit_per = self.resale_price - self.retail_price
@@ -38,6 +43,10 @@ class Collectibles:
     quantity: int = 1
     profit_per: float = 0.0
     profit: float = 0.0
+
+def fetch_user_collectibles(user_id, supabase):
+    response = supabase.table("collectibles").select("*").eq("user_id", user_id).execute()
+    return [Collectibles(**entry) for entry in response.data]
 
     def __post_init__(self):
         self.profit_per = self.resale_price - self.retail_price
@@ -61,6 +70,10 @@ class Media:
     quantity: int = 1
     profit_per: float = field(init=False)
     profit: float = field(init=False)
+
+def fetch_user_media(user_id, supabase):
+    response = supabase.table("media").select("*").eq("user_id", user_id).execute()
+    return [Media(**entry) for entry in response.data]
 
     def __post_init__(self):
         self.profit_per = self.resale_price - self.retail_price
