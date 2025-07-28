@@ -18,7 +18,7 @@ def save_sneaker_data(sneaker):
             df = df.iloc[:-1]
     else:
         df = pd.DataFrame(
-            columns=["Purchase Date", "Retailer", "Release Date", "Size", "Brand", "Model", "Colorway", "SKU", "Quantity",
+            columns=["User+ID"", Purchase Date", "Retailer", "Release Date", "Size", "Brand", "Model", "Colorway", "SKU", "Quantity",
                      "Retail Price", "Resale Price", "Profit Per", "Profit"])
 
     # Explicitly map the attributes of the Sneaker instance to the expected column names
@@ -78,7 +78,7 @@ def save_collectibles_data(collectibles):
             df = df.iloc[:-1]
     else:
         df = pd.DataFrame(
-            columns=["Purchase Date", "Retailer", "Brand", "Item", "Variation",
+            columns=["User_ID", "Purchase Date", "Retailer", "Brand", "Item", "Variation",
                      "Quantity", "Retail Price", "Resale Price", "Profit Per", "Profit"])
 
     # Example new entry
@@ -134,7 +134,7 @@ def save_media_data(media):
             df = df.iloc[:-1]
     else:
         df = pd.DataFrame(
-            columns=["Purchase Date", "Retailer", "Media", "Speed", "Artist", "Album", "Variation",
+            columns=["User-ID", "Purchase Date", "Retailer", "Media", "Speed", "Artist", "Album", "Variation",
                      "Signed", "Edition", "Quantity", "Retail Price", "Resale Price", "Profit Per", "Profit"])
 
     # Example new entry
@@ -142,7 +142,7 @@ def save_media_data(media):
         "User ID": media.user_id,
         "Purchase Date": media.purchase_date,
         "Retailer": media.retailer,
-        "Media": media.media,
+        "Media Type": media.media_type,
         "Speed": media.speed,
         "Artist": media.artist,
         "Album": media.album,

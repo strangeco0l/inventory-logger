@@ -1,4 +1,3 @@
-from logger.data_handling import save_sneaker_data
 from logger.models import Sneaker
 from .supabase_client import supabase
 
@@ -47,9 +46,9 @@ def gather_sneaker_data(user_id):
         model=get_validated_input("Model?: ").title(),
         colorway=get_validated_input("CW?: ").title(),
         sku=get_validated_input("SKU?: "),
-        retail_price=get_validated_input("What did you pay?: $", float),
-        resale_price=get_validated_input("What's it worth?: $", float),
-        quantity=get_validated_input("Quantity?: ", int)
+        # retail_price=get_validated_input("What did you pay?: $", float),
+        # resale_price=get_validated_input("What's it worth?: $", float),
+        # quantity=get_validated_input("Quantity?: ", int)
     )
 
     save_sneaker_to_supabase(sneaker)  # pass user_id here
