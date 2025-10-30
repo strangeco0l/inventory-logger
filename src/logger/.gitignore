@@ -1,1 +1,20 @@
-.env
+# Ignore Python cache and compiled files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Ignore virtual environments
+.venv/
+env/
+venv/
+
+# Ignore system files
+.DS_Store
+Thumbs.db
+
+# Ignore IDE/project files
+.idea/
+.vscode/
+
+# Ignore user state or temporary data
+user_state.json
