@@ -3,25 +3,34 @@ from dataclasses import dataclass, field
 
 @dataclass
 class Sneaker:
-    user_id: str  # <-- Add this line at the top
+    user_id: str
     purchase_date: str
     retailer: str
-    release_date: str
-    size: str
-    brand: str
-    model: str
-    colorway: str
-    sku: str
-    retail_price: float
-    resale_price: float
+    release_date: str = None
+    size: str = ""
+    brand: str = ""
+    model: str = ""
+    colorway: str = ""
+    sku: str = ""
+    retail_price: float = 0.0
+    resale_price: float = None
     quantity: int = 1
-    profit_per: float = field(init=False)
-    profit: float = field(init=False)
+    profit_per: float = 0.0
+    profit: float = 0.0
 
     def __post_init__(self):
-        print("using updated sneaker class with user_id!")
-        self.profit_per = self.resale_price - self.retail_price
-        self.profit = self.profit_per * self.quantity
+        if self.resale_price is not None:
+            self.profit_per = round(self.resale_price - self.retail_price, 2)
+            self.profit = round(self.profit_per * self.quantity, 2)
+        else:
+            self.profit_per = 0.0
+            self.profit = 0.0
+
+
+
+    def __post_init__(self):
+        self.profit_per = round(self.resale_price - self.retail_price, 2)
+        self.profit = round(self.profit_per * self.quantity, 2)
 
 
 @dataclass
