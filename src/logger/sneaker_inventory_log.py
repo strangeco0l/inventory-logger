@@ -2,9 +2,9 @@ import os
 import json
 from supabase import create_client, Client
 from datetime import datetime
-from logger.models import Sneaker
-from logger.supabase_client import supabase
-from logger.ebay_sold_scraper import get_average_sold_price
+from src.logger.models import Sneaker
+from src.logger.supabase_client import supabase
+from src.logger.ebay_sold_scraper import get_average_sold_price
 
 
 USER_STATE_FILE = "user_state.json"
