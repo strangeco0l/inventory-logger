@@ -1,0 +1,59 @@
+# =========================
+# Python cache and compiled files
+# =========================
+__pycache__/
+*.py[cod]
+*$py.class
+
+# =========================
+# Virtual environments
+# =========================
+venv/
+.venv/
+
+# =========================
+# Environment files
+# =========================
+# Ignore all .env files anywhere in the repo
+*.env
+
+# =========================
+# System files
+# =========================
+.DS_Store
+Thumbs.db
+
+# =========================
+# IDE/project files
+# =========================
+.idea/
+.vscode/
+
+# =========================
+# Image cache and generated data
+# =========================
+.image_cache/
+data/
+./build
+data/images/
+images/
+build/
+
+# =========================
+# Test directories and temporary scripts
+# =========================
+src/logger/tests/
+src/logger/tests/
+test_*.py
+
+# =========================
+# Bytecode and logs
+# =========================
+*.pyc
+*.pyo
+*.log
+
+# =========================
+# User state or temporary data
+# =========================
+user_state.json
