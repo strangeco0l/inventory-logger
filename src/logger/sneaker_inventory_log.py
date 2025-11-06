@@ -94,6 +94,15 @@ def get_date_input(prompt):
 # Save Sneaker
 # -------------------------------
 
+def get_all_sneakers(user_id: str):
+    """Fetch all sneakers for a given user from Supabase"""
+    try:
+        response = supabase.table("sneakers").select("*").eq("user_id", user_id).execute()
+        return response.data or []
+    except Exception as e:
+        print(f"[ERROR] Failed to fetch sneakers: {e}")
+        return []
+
 
 def save_sneaker_to_supabase(sneaker):
     data = {
