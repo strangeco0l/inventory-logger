@@ -104,7 +104,12 @@ class SneakerLoggerApp:
         top.title("Select Date")
         top.geometry("350x300")
 
-        cal = Calendar(top, selectmode='day')
+        # ✅ Ensure calendar stays on top of main window
+        top.lift()
+        top.attributes("-topmost", True)
+        top.focus_force()
+
+        cal = Calendar(top, selectmode='day', date_pattern="yyyy-mm-dd")
         cal.pack(expand=True, fill='both', padx=10, pady=10)
 
         def pick_date():
@@ -221,16 +226,42 @@ class SneakerLoggerApp:
             img_label = ctk.CTkLabel(frame, text="[Loading...]", width=100, height=100)
             img_label.pack(side="left", padx=10, pady=10)
 
-            title = f"{row.get('brand','')} {row.get('model','')} {row.get('colorway','')}"
+            # Sneaker Info
+            title = f"{row.get('brand', '')} {row.get('model', '')} {row.get('colorway', '')}"
             ctk.CTkLabel(frame, text=title, font=("Segoe UI", 12, "bold")).pack(anchor="w")
-            price_info = f"Retail: ${row.get('retail_price',0)} | Resale: ${row.get('resale_price',0)} | Profit: ${row.get('profit',0)}"
+            price_info = f"Retail: ${row.get('retail_price', 0)} | Resale: ${row.get('resale_price', 0)} | Profit: ${row.get('profit', 0)}"
             ctk.CTkLabel(frame, text=price_info, font=("Segoe UI", 10)).pack(anchor="w")
 
-            edit_btn = ctk.CTkButton(frame, text="Edit", command=lambda r=row: self.open_edit_popup(r))
-            edit_btn.pack(side="right", padx=10)
+            # Action Buttons (Edit / Delete)
+            btn_frame = ctk.CTkFrame(frame, fg_color="transparent")
+            btn_frame.pack(side="right", padx=10)
+
+            edit_btn = ctk.CTkButton(btn_frame, text="Edit", width=70, command=lambda r=row: self.open_edit_popup(r))
+            edit_btn.pack(side="left", padx=5)
+
+            delete_btn = ctk.CTkButton(btn_frame, text="Delete", fg_color="red", hover_color="#b30000", width=70,
+                                       command=lambda r=row: self.delete_sneaker(r))
+            delete_btn.pack(side="left", padx=5)
 
             self.inventory_items.append({"row": row, "img_label": img_label})
         threading.Thread(target=self._fetch_images_background, daemon=True).start()
+
+    # ------------------- DELETE SNEAKER -------------------
+    def delete_sneaker(self, row):
+        confirm = messagebox.askyesno("Confirm Delete",
+                                      f"Are you sure you want to delete:\n\n{row.get('brand')} {row.get('model')}?")
+        if not confirm:
+            return
+        try:
+            sneaker_id = row.get("id")
+            if not sneaker_id:
+                messagebox.showerror("Error", "Sneaker record missing ID.")
+                return
+            supabase.table("sneakers").delete().eq("id", sneaker_id).execute()
+            messagebox.showinfo("Deleted", "Sneaker deleted successfully.")
+            self.load_inventory()
+        except Exception as e:
+            messagebox.showerror("Error", f"Failed to delete sneaker: {e}")
 
     def _fetch_images_background(self):
         for item in self.inventory_items:
