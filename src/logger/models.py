@@ -2,7 +2,7 @@ from dataclasses import dataclass, field
 from typing import Optional
 from pathlib import Path
 import shutil
-from .sneaker_images_selenium import fetch_sneaker_image  # your free DuckDuckGo image fetcher
+
 
 
 @dataclass

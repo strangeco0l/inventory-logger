@@ -9,6 +9,7 @@ __pycache__/
 # Virtual environments
 # =========================
 venv/
+.venv/
 
 # =========================
 # Environment files
@@ -27,6 +28,28 @@ Thumbs.db
 # =========================
 .idea/
 .vscode/
+
+# =========================
+# Image cache and generated data
+# =========================
+.image_cache/
+data/
+data/images/
+images/
+
+# =========================
+# Test directories and temporary scripts
+# =========================
+src/logger/tests/
+tests/
+test_*.py
+
+# =========================
+# Bytecode and logs
+# =========================
+*.pyc
+*.pyo
+*.log
 
 # =========================
 # User state or temporary data
